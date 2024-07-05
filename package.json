@@ -1,12 +1,11 @@
 {
   "name": "babel-plugin-transform-regex",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Babel plugin for the regex package",
   "author": "Steven Levithan",
   "license": "MIT",
   "type": "module",
   "exports": "./dist/index.js",
-  "module": "./dist/index.js",
   "files": [
     "dist"
   ],
