@@ -5,7 +5,7 @@
   "author": "Steven Levithan",
   "license": "MIT",
   "type": "module",
-  "exports": "./dist/index.js",
+  "exports": "./src/index.js",
   "files": [
     "dist"
   ],
@@ -14,7 +14,6 @@
     "url": "git+https://github.com/slevithan/babel-plugin-transform-regex.git"
   },
   "scripts": {
-    "build": "babel src --out-dir dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -23,9 +22,5 @@
   ],
   "dependencies": {
     "regex": "^2.1.0"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.24.7",
-    "@babel/core": "^7.24.7"
   }
 }
