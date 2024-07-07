@@ -1,0 +1,93 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html, body, #content {height: 100%}
+
+body {
+  font-family: Calibri, "Helvetica Neue", sans-serif;
+  background-color: #c9e4ff;
+  background: repeating-linear-gradient(45deg, #d6ebff, #d6ebff 3px, #c9e4ff 3px, #c9e4ff 10px);
+}
+
+#content {
+  background-color: #fff;
+  max-width: 65rem;
+  padding: 2.8vw 4.5vw;
+  margin: 0 auto;
+  box-shadow: 0 0 0 10px #80c0ff;
+}
+
+h1, h2, ul, p, pre, figure {
+  margin-bottom: 12px;
+}
+
+h1, h2 {
+  font-family: Cambria, Cochin, Georgia;
+}
+
+h2 {
+  margin-top: 18px;
+}
+
+textarea {
+  width: 100%;
+  min-height: 70px;
+  max-height: 200px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.2s ease;
+  background-color: #fcfcfc;
+}
+
+textarea:focus {
+  outline: none;
+  box-shadow: 0 0 8px #80c0ff;
+}
+
+pre, code, textarea {
+  font-family: Consolas, "Source Code Pro", Monospace;
+  font-size: 1em;
+  border-radius: 0.375em;
+}
+
+#output, textarea {
+  padding: 0.6em;
+  white-space: pre-wrap;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+}
+
+#output {
+  border: 1px dotted #aaa;
+  width: 100%;
+  min-height: 2.5em;
+  max-height: 200px;
+  overflow: auto;
+  background-color: #fff;
+  margin-bottom: 6px;
+}
+
+#output.error {
+  background-color: pink;
+}
+
+figure {
+  border-radius: 0.375em;
+  background-color: #f9f9f9;
+  padding: 0.3em;
+}
+
+code {
+  padding: 0 3px;
+  background-color: #f3f3f3;
+}
+
+small {
+  font-size: 0.8em;
+}
+
+img {
+  vertical-align: middle;
+}
+

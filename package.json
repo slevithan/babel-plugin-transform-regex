@@ -1,20 +1,22 @@
 {
   "name": "babel-plugin-transform-regex",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Babel plugin for the regex package",
   "author": "Steven Levithan",
   "license": "MIT",
   "type": "module",
   "exports": "./src/index.js",
+  "scripts": {
+    "build": "esbuild src/index.js --bundle --minify --outfile=dist/standalone.min.js --global-name=BabelPluginTransformRegexStandalone",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "files": [
+    "src",
     "dist"
   ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/slevithan/babel-plugin-transform-regex.git"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "regex",
@@ -22,5 +24,8 @@
   ],
   "dependencies": {
     "regex": "^2.1.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.23.0"
   }
 }

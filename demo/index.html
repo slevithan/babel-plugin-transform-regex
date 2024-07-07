@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>babel-plugin-transform-regex</title>
+  <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+  <div id="content">
+    <h1>
+      babel-plugin-transform-regex
+      <a href="https://github.com/slevithan/babel-plugin-transform-regex">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/GitHub_Invertocat_Logo.svg" width="25" height="25" alt="GitHub">
+      </a>
+    </h1>
+    <p>This is a basic REPL for testing the output of <a href="https://github.com/slevithan/babel-plugin-transform-regex"><code>babel-plugin-transform-regex</code></a>, which allows most of the <a href="https://github.com/slevithan/regex"><code>regex</code></a> package's features to be used dependency-free and without any runtime cost.</p>
+
+    <h2>Try it</h2>
+    <p><textarea id="input" spellcheck="false" oninput="showOutput(); autoGrow(this)">const re = regex`${'.*'}`;</textarea></p>
+    <figure>
+      <pre id="output"></pre>
+      <figcaption>
+        <label>
+          <input type="checkbox" id="transform-v" onchange="transformV(this.checked)">
+          Also apply <code>@babel/plugin-transform-unicode-sets-regex</code>
+        </label>
+      </figcaption>
+    </figure>
+  </div>
+
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/regex/dist/regex.min.js"></script>
+  <script src="../dist/standalone.min.js"></script>
+  <script>
+    Babel.registerPlugin('babel-plugin-transform-regex', BabelPluginTransformRegexStandalone);
+
+    let shouldTransformV = document.getElementById('transform-v').checked;
+    showOutput();
+
+    function showOutput() {
+      const code = document.getElementById('input').value;
+      const outputEl = document.getElementById('output');
+      const plugins = ['babel-plugin-transform-regex'];
+      if (shouldTransformV) {
+        plugins.push(Babel.availablePlugins['transform-unicode-sets-regex']);
+      }
+      outputEl.classList.remove('error');
+      try {
+        const output = Babel.transform(code, {plugins}).code;
+        outputEl.innerHTML = escHtml(output);
+      } catch (e) {
+        outputEl.classList.add('error');
+        outputEl.innerHTML = '<i>Error</i>';
+      }
+    }
+
+    function autoGrow(el) {
+      el.style.height = '0';
+      el.style.height = (el.scrollHeight + 5) + 'px';
+    }
+
+    function escHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+    }
+
+    function transformV(checked) {
+      shouldTransformV = checked;
+      showOutput();
+    }
+  </script>
+</body>
+</html>
