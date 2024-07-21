@@ -1,4 +1,4 @@
-import {regex, partial} from 'regex';
+import {regex, pattern} from 'regex';
 
 export default ({types: t}) => {
   function isNondynamicRegExpCall(node) {
@@ -16,31 +16,31 @@ export default ({types: t}) => {
     const args = node.arguments;
     return new RegExp(getNondynamicString(args[0]), getNondynamicString(args[1]));
   }
-  function isNondynamicPartial(node) {
-    return ( // `partial` call
+  function isNondynamicPattern(node) {
+    return ( // `pattern` call
       t.isCallExpression(node) &&
-      t.isIdentifier(node.callee, {name: 'partial'}) &&
+      t.isIdentifier(node.callee, {name: 'pattern'}) &&
       node.arguments.length === 1 &&
       (isNondynamicString(node.arguments[0]) || t.isNumericLiteral(node.arguments[0]))
     ) ||
-    ( // `partial` template tag, without interpolation
+    ( // `pattern` template tag, without interpolation
       t.isTaggedTemplateExpression(node) &&
-      t.isIdentifier(node.tag, {name: 'partial'}) &&
+      t.isIdentifier(node.tag, {name: 'pattern'}) &&
       node.quasi.quasis.length === 1
     );
   }
-  // Assumes the structure was validated by `isNondynamicPartial`
-  function getNondynamicPartial(node) {
+  // Assumes the structure was validated by `isNondynamicPattern`
+  function getNondynamicPattern(node) {
     if (t.isCallExpression(node)) {
       const arg = node.arguments[0];
       if (isNondynamicString(arg)) {
-        return partial(getNondynamicString(arg));
+        return pattern(getNondynamicString(arg));
       }
       if (t.isNumericLiteral(arg)) {
-        return partial(arg.value);
+        return pattern(arg.value);
       }
     } else if (t.isTaggedTemplateExpression(node)) {
-      return partial(node.quasi.quasis[0].value.raw);
+      return pattern(node.quasi.quasis[0].value.raw);
     }
   }
   function isNondynamicString(node) {
@@ -93,7 +93,7 @@ export default ({types: t}) => {
         t.isNumericLiteral(e) ||
         t.isRegExpLiteral(e) ||
         isNondynamicRegExpCall(e) ||
-        isNondynamicPartial(e);
+        isNondynamicPattern(e);
     });
   }
   function getRegexCallArg(node) {
@@ -124,34 +124,34 @@ export default ({types: t}) => {
         result.push(new RegExp(e.pattern, e.flags));
       } else if (isNondynamicRegExpCall(e)) {
         result.push(getNondynamicRegExpCall(e));
-      } else if (isNondynamicPartial(e)) {
-        result.push(getNondynamicPartial(e));
+      } else if (isNondynamicPattern(e)) {
+        result.push(getNondynamicPattern(e));
       }
     });
     return result;
   }
 
   function isRegexTemplate(node) {
-    // Restrict interpolation into the pattern to non-dynamic string/number/regexp literals, plus
-    // regexes and partials constructed with non-dynamic literals
+    // Restrict interpolation into the expression to non-dynamic string/number/regexp literals,
+    // plus regexes and patterns constructed with non-dynamic literals
     if (!(
       t.isTemplateLiteral(node.quasi) &&
       (node.quasi.quasis.length === 1 || isWhitelistedInterpolation(node.quasi.expressions))
     )) {
       return false;
     }
-    // Allow: regex`<pattern>`
+    // Allow: regex`<expression>`
     if (t.isIdentifier(node.tag, {name: 'regex'})) {
       return true;
     }
-    // For remaining cases, require: regex(...)`<pattern>`
+    // For remaining cases, require: regex(...)`<expression>`
     if (!(
       t.isCallExpression(node.tag) &&
       t.isIdentifier(node.tag.callee, {name: 'regex'})
     )) {
       return false;
     }
-    // Allow: regex()`<pattern>`, without flags
+    // Allow: regex()`<expression>`, without flags
     if (node.tag.arguments.length === 0) {
       return true;
     }
@@ -160,8 +160,8 @@ export default ({types: t}) => {
       return false;
     }
     const arg = node.tag.arguments[0];
-    // Allow: regex('<flags>')`<pattern>`
-    // Allow: regex({<options>})`<pattern>`
+    // Allow: regex('<flags>')`<expression>`
+    // Allow: regex({<options>})`<expression>`
     if (isNondynamicString(arg) || isSimpleOptionsObject(arg)) {
       return true;
     }
@@ -176,7 +176,7 @@ export default ({types: t}) => {
       return false;
     }
     const arg = node.arguments[0];
-    // Allow: `regex({raw: ['<pattern>']})`
+    // Allow: `regex({raw: ['<expression>']})`
     if (
       t.isObjectExpression(arg) &&
       arg.properties.length === 1 &&
@@ -204,17 +204,17 @@ export default ({types: t}) => {
         path.replaceWith(t.regExpLiteral(re.source, re.flags));
       },
       CallExpression(path) {
-        // Currently only has basic support for `regex({raw: ['<pattern>']})`
+        // Currently only has basic support for `regex({raw: ['<expression>']})`
         // TODO: Allow:
-        // - `regex('<flags>')({raw: ['<pattern>']})`
-        // - `regex({<options>})({raw: ['<pattern>']})`
-        // - `regex({raw: [`<pattern>`]})`, with template literal or String.raw`<pattern>`
-        // - `regex({raw: ['<pattern>', '<pattern>']}, <value>)`, with template values
+        // - `regex('<flags>')({raw: ['<expression>']})`
+        // - `regex({<options>})({raw: ['<expression>']})`
+        // - `regex({raw: [`<expression>`]})`, with template literal or String.raw`<expression>`
+        // - `regex({raw: ['<expression>', '<expression>']}, <value>)`, with template substitutions
         if (!isRegexTemplateViaCall(path.node)) {
           return;
         }
-        const pattern = path.node.arguments[0].properties[0].value.elements[0].value;
-        const re = regex({raw: [pattern]});
+        const expression = path.node.arguments[0].properties[0].value.elements[0].value;
+        const re = regex({raw: [expression]});
         path.replaceWith(t.regExpLiteral(re.source, re.flags));
       },
     },

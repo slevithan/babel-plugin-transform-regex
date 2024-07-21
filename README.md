@@ -1,29 +1,29 @@
 # babel-plugin-transform-regex
 
-This is a [Babel](https://babel.dev/) plugin that transpiles tagged [`regex`](https://github.com/slevithan/regex) template literals into native `RegExp` literals, enabling syntax for modern and more readable regex features (atomic groups, subroutines, insignificant whitespace, comments, *named capture only* mode, etc.) without the need for calling `regex` at runtime. Although `regex` is already a lightweight and high-performance package, nevertheless this takes things even further by giving you its developer experience benefits while allowing you to avoid adding any runtime dependencies and without users paying any runtime cost.
+This is a [Babel](https://babel.dev/) plugin that transpiles tagged [`regex`](https://github.com/slevithan/regex) templates into native `RegExp` literals, enabling syntax for modern and more readable regex features (atomic groups, subroutines, definition groups, insignificant whitespace, comments, *named capture only* mode, etc.) without the need for calling `regex` at runtime. Although `regex` is already a lightweight and high-performance library, this takes things even further by giving you its developer experience benefits without adding any runtime dependencies and without users paying any runtime cost.
 
 **[Try the demo REPL](https://slevithan.github.io/babel-plugin-transform-regex/demo/)**.
 
 The following call formats are all supported:
 
-- `` regex`<pattern>` ``
-- `` regex()`<pattern>` ``
-- `` regex('<flags>')`<pattern>` ``
-- `` regex({<options>})`<pattern>` ``
+- `` regex`<expression>` ``
+- `` regex()`<expression>` ``
+- `` regex('<flags>')`<expression>` ``
+- `` regex({<options>})`<expression>` ``
 
-Interpolation into the regex pattern is supported, so long as the interpolated values are:
+Interpolation into the expression is supported, so long as the interpolated values are:
 
 - Inline string, regex, or number literals.
 - Inline regexes constructed via `RegExp` with string values.
-- Inline partials. Allows both `` partial`…` `` as a template tag (without interpolation) and `partial(…)` with a string or number value.
+- Inline patterns, via `` pattern`…` `` as a template tag (without interpolation) or `pattern(…)` as a funcion call with a string or number value.
 
 Additional details:
 
 - Wherever strings are allowed, `'…'`, `"…"`, `` `…` ``, and `` String.raw`…` `` can all be used, so long as they don't include interpolation.
 - Tagged `regex` templates that interpolate variables or other dynamic values are **not transformed**.
-- Basic support is included for transforming the `regex` tag when called as a function instead of with backticks, via `regex({raw: ['<pattern>']})`.
+- Basic support is included for transforming the `regex` tag when called as a function instead of with backticks, via `regex({raw: ['<expression>']})`.
 
-**TODO:** Support for additional usage patterns might be added in future versions, including interpolating *variables* that hold non-dynamic strings, regexes, numbers, and partials. Contributions are welcome!
+**TODO:** Support for additional usage patterns might be added in future versions, including interpolating variables that hold non-dynamic strings, regexes, numbers, and patterns. Contributions are welcome!
 
 ## Example
 
@@ -44,11 +44,11 @@ export const ipv4 = /^(?<byte>2[0-4]\d|25[0-5]|1\d\d|[1-9]?\d)(?:\.(2[0-4]\d|25[
 
 ## Compatibility
 
-Outputted regexes use flag `v`, supported by Node.js 20+ and 2023-era browsers or later. You can further transpile away the `v` flag with Babel's official plugin [@babel/plugin-transform-unicode-sets-regex](https://babel.dev/docs/babel-plugin-transform-unicode-sets-regex) that is included in [@babel/preset-env](https://babel.dev/docs/babel-preset-env).
+Emitted regexes use flag <kbd>v</kbd>, supported by Node.js 20 and 2023-era browsers or later. You can further transpile away the <kbd>v</kbd> flag with Babel's official plugin [@babel/plugin-transform-unicode-sets-regex](https://babel.dev/docs/babel-plugin-transform-unicode-sets-regex) that is included in [@babel/preset-env](https://babel.dev/docs/babel-preset-env).
 
 ## Installation and usage
 
-Add a recent version of Babel (tested with v7.24.7) and this plugin to your project:
+Add this plugin and a recent version of Babel (tested with v7.24) to your project:
 
 ```sh
 npm install --save-dev @babel/core @babel/cli
@@ -62,7 +62,7 @@ Run the following command to compile all of your code from the `src` directory t
 
 ### Optional setup steps
 
-To make the build step easier, create a config file in the root of your project named `babel.config.json`, with this content:
+To make this easier to run, create a config file in the root of your project named `babel.config.json`, with this content:
 
 ```json
 {
