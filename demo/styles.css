@@ -33,8 +33,8 @@ h2 {
 
 textarea {
   width: 100%;
-  min-height: 70px;
-  max-height: 200px;
+  min-height: 150px;
+  max-height: 250px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   transition: box-shadow 0.2s ease;
   background-color: #fcfcfc;

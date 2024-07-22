@@ -14,10 +14,20 @@
         <img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/GitHub_Invertocat_Logo.svg" width="25" height="25" alt="GitHub">
       </a>
     </h1>
-    <p>This is a basic REPL for testing the output of <a href="https://github.com/slevithan/babel-plugin-transform-regex"><code>babel-plugin-transform-regex</code></a>, which allows most of the <a href="https://github.com/slevithan/regex"><code>regex</code></a> package's features to be used dependency-free and without any runtime cost.</p>
+    <p>This is a basic REPL for testing the output of <a href="https://github.com/slevithan/babel-plugin-transform-regex"><code>babel-plugin-transform-regex</code></a>, which allows most of the <a href="https://github.com/slevithan/regex"><code>regex</code></a> library's features to be used dependency-free and without any runtime cost.</p>
 
     <h2>Try it</h2>
-    <p><textarea id="input" spellcheck="false" oninput="showOutput(); autoGrow(this)">const re = regex`${'.*'}`;</textarea></p>
+    <p><textarea id="input" spellcheck="false" oninput="showOutput(this); autoGrow(this)">const re = regex`
+  ^ Admitted:\ (?<admitted> \g<date>) \n
+    Released:\ (?<released> \g<date>) $
+
+  (?(DEFINE)
+    (?<date>  \g<year>-\g<month>-\g<day>)
+    (?<year>  \d{4})
+    (?<month> \d{2})
+    (?<day>   \d{2})
+  )
+`;</textarea></p>
     <figure>
       <pre id="output"></pre>
       <figcaption>
@@ -36,10 +46,12 @@
     Babel.registerPlugin('babel-plugin-transform-regex', BabelPluginTransformRegexStandalone);
 
     let shouldTransformV = document.getElementById('transform-v').checked;
-    showOutput();
+    const inputEl = document.getElementById('input');
+    autoGrow(inputEl);
+    showOutput(inputEl);
 
-    function showOutput() {
-      const code = document.getElementById('input').value;
+    function showOutput(el) {
+      const code = el.value;
       const outputEl = document.getElementById('output');
       const plugins = ['babel-plugin-transform-regex'];
       if (shouldTransformV) {
@@ -48,11 +60,17 @@
       outputEl.classList.remove('error');
       try {
         const output = Babel.transform(code, {plugins}).code;
-        outputEl.innerHTML = escHtml(output);
+        outputEl.innerHTML = escapeHtml(output);
       } catch (e) {
         outputEl.classList.add('error');
-        outputEl.innerHTML = '<i>Error</i>';
+        outputEl.innerHTML = `<i>Error: ${escapeHtml(cleanupError(e.message))}</i>`;
       }
+    }
+
+    function cleanupError(str) {
+      return str.
+        replace(/^unknown(?: file)?: /, '').
+        replace(/^(Invalid regular expression: )\/.*?\/v: (.*)/su, '$1$2');
     }
 
     function autoGrow(el) {
@@ -60,13 +78,13 @@
       el.style.height = (el.scrollHeight + 5) + 'px';
     }
 
-    function escHtml(str) {
+    function escapeHtml(str) {
       return str.replace(/&/g, '&amp;').replace(/</g, '&lt;');
     }
 
     function transformV(checked) {
       shouldTransformV = checked;
-      showOutput();
+      showOutput(inputEl);
     }
   </script>
 </body>
