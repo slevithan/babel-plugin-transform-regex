@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-transform-regex",
-  "version": "0.3.0",
+  "version": "3.0.0",
   "description": "Babel plugin for the regex package",
   "author": "Steven Levithan",
   "license": "MIT",
