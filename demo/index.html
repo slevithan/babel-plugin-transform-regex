@@ -40,7 +40,6 @@
   </div>
 
   <script src="https://unpkg.com/@babel/standalone@7.24.10/babel.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/regex@3.0.0/dist/regex.min.js"></script>
   <script src="../dist/standalone.min.js"></script>
   <script>
     Babel.registerPlugin('babel-plugin-transform-regex', BabelPluginTransformRegexStandalone);
@@ -86,6 +85,11 @@
       shouldTransformV = checked;
       showOutput(inputEl);
     }
+  </script>
+  <!-- Load the latest published version of `regex` so it can be used in the console -->
+  <script src="https://cdn.jsdelivr.net/npm/regex/dist/regex.min.js"></script>
+  <script>
+    const {regex, pattern} = Regex;
   </script>
 </body>
 </html>
