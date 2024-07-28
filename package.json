@@ -8,7 +8,9 @@
   "exports": "./src/index.js",
   "scripts": {
     "build": "esbuild src/index.js --bundle --minify --outfile=dist/standalone.min.js --global-name=BabelPluginTransformRegexStandalone",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "pretest": "npm run build",
+    "test": "jasmine",
+    "prepare": "npm test"
   },
   "files": [
     "src",
@@ -26,6 +28,8 @@
     "regex": "^3.1.0"
   },
   "devDependencies": {
-    "esbuild": "^0.23.0"
+    "@babel/core": "^7.24.9",
+    "esbuild": "^0.23.0",
+    "jasmine": "^5.2.0"
   }
 }

@@ -13,7 +13,7 @@ The following call formats are all supported:
 
 Interpolation into the expression is supported, so long as the interpolated values are:
 
-- Inline string, regex, or number literals.
+- Inline string, regexp, or number literals.
 - Inline regexes constructed via `RegExp` with string values.
 - Inline patterns, via `` pattern`…` `` as a template tag (without interpolation) or `pattern(…)` as a funcion call with a string or number value.
 
