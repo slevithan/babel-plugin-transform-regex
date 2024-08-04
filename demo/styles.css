@@ -47,7 +47,7 @@ textarea:focus {
 
 pre, code, textarea {
   font-family: Consolas, "Source Code Pro", Monospace;
-  font-size: 1em;
+  font-size: 0.9em;
   border-radius: 0.375em;
 }
 

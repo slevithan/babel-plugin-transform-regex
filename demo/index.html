@@ -62,7 +62,7 @@
         outputEl.innerHTML = escapeHtml(output);
       } catch (e) {
         outputEl.classList.add('error');
-        outputEl.innerHTML = `<i>Error: ${escapeHtml(cleanupError(e.message))}</i>`;
+        outputEl.innerHTML = `Error: ${escapeHtml(cleanupError(e.message))}`;
       }
     }
 
