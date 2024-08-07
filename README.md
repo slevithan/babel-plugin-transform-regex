@@ -2,7 +2,7 @@
 
 This is a [Babel](https://babel.dev/) plugin that transpiles tagged [`regex`](https://github.com/slevithan/regex) templates into native `RegExp` literals, enabling syntax for modern and more readable regex features (atomic groups, subroutines, subroutine definition groups, insignificant whitespace, comments, *named capture only* mode, etc.) without the need for calling `regex` at runtime. Although `regex` is already a lightweight and high-performance library, this takes things further by giving you its developer experience benefits without adding any runtime dependencies and without users paying any runtime cost.
 
-<big>**[Try the demo REPL](https://slevithan.github.io/babel-plugin-transform-regex/demo/)**.</big>
+<big>**[Try the demo REPL](https://slevithan.github.io/babel-plugin-transform-regex/demo/)**</big>
 
 ## Example
 
@@ -43,9 +43,10 @@ Additional details:
 
 ## Unsupported
 
-Tagged `regex` templates that interpolate variables or other dynamic values are not transformed. Support for interpolating variables that hold non-dynamic strings, regexes, numbers, and patterns might be added in future versions. Contributions are welcome!
+- Tagged `regex` templates that interpolate *variables* or other *dynamic* values are not transformed.
+- The specific options `subclass`, `plugins`, and `unicodeSetsPlugin` are disallowed. Regexes that use these options are not transformed.
 
-Although the use of most options via `` regex({…})`…` `` is supported, the following specific options are explicitly disallowed: `subclass`, `plugins`, `unicodeSetsPlugin`. Regexes that use these options are not transformed.
+Support for interpolating variables that hold non-dynamic strings, regexes, numbers, and patterns might be added in future versions. Contributions are welcome!
 
 ## Compatibility
 
