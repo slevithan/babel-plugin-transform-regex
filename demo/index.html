@@ -14,7 +14,7 @@
         <img src="https://upload.wikimedia.org/wikipedia/commons/c/c2/GitHub_Invertocat_Logo.svg" width="25" height="25" alt="GitHub">
       </a>
     </h1>
-    <p>This is a basic REPL for testing the output of <a href="https://github.com/slevithan/babel-plugin-transform-regex"><code>babel-plugin-transform-regex</code></a>, which allows most of the <a href="https://github.com/slevithan/regex"><code>regex</code></a> library's features to be used dependency-free and without any runtime cost.</p>
+    <p>This is a basic REPL for testing the output of <a href="https://github.com/slevithan/babel-plugin-transform-regex">babel-plugin-transform-regex</a>, which allows most of the <a href="https://github.com/slevithan/regex">regex</a> library's features to be used dependency-free and without any runtime cost.</p>
 
     <h2>Try it</h2>
     <p><textarea id="input" spellcheck="false" oninput="showOutput(this); autoGrow(this)">const re = regex`
@@ -39,7 +39,7 @@
     </figure>
   </div>
 
-  <script src="https://unpkg.com/@babel/standalone@7.25.0/babel.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.25.3/babel.min.js"></script>
   <script src="../dist/standalone.min.js"></script>
   <script>
     Babel.registerPlugin('babel-plugin-transform-regex', BabelPluginTransformRegexStandalone);
@@ -86,8 +86,8 @@
       showOutput(inputEl);
     }
   </script>
-  <!-- Load the latest published version of `regex` so it can be used in the console -->
-  <script src="https://cdn.jsdelivr.net/npm/regex/dist/regex.min.js"></script>
+  <!-- Load `regex` so it can be used in the console -->
+  <script src="https://cdn.jsdelivr.net/npm/regex@4.0.0/dist/regex.min.js"></script>
   <script>
     const {regex, pattern} = Regex;
   </script>

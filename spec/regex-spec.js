@@ -36,13 +36,21 @@ describe('regex', () => {
       expect(transformed('regex({flags: "i"})`.`')).toBe(actual(regex({flags: "i"})`.`));
       expect(transformed('regex({flags: `i`})`.`')).toBe(actual(regex({flags: `i`})`.`));
       expect(transformed('regex({flags: String.raw`i`})`.`')).toBe(actual(regex({flags: String.raw`i`})`.`));
-      expect(transformed("regex({flags: 'i', __flagX: true})` .`")).toBe(actual(regex({flags: 'i', __flagX: true})` .`));
-      expect(transformed("regex({flags: 'i', __flagX: false})` .`")).toBe(actual(regex({flags: 'i', __flagX: false})` .`));
+      expect(transformed("regex({flags: 'i', disable: {x: false}})` . `")).toBe(actual(regex({flags: 'i', disable: {x: false}})` . `));
+      expect(transformed("regex({flags: 'i', disable: {x: true}})` . `")).toBe(actual(regex({flags: 'i', disable: {x: true}})` . `));
+    });
+
+    it('should not transform tag with explicitly disallowed options', () => {
+      expect(transformed("regex({subclass: true})`.`")).not.toBe(actual(regex({subclass: true})`.`));
+      expect(transformed("regex({plugins: []})`.`")).not.toBe(actual(regex({plugins: []})`.`));
+      expect(transformed("regex({unicodeSetsPlugin: null})`.`")).not.toBe(actual(regex({unicodeSetsPlugin: null})`.`));
     });
 
     it('should transform function call with raw array', () => {
       expect(transformed("regex({raw: ['.']})")).toBe(actual(regex({raw: ['.']})));
       expect(transformed('regex({raw: ["."]})')).toBe(actual(regex({raw: ["."]})));
+      expect(transformed('regex({raw: [`.`]})')).toBe(actual(regex({raw: [`.`]})));
+      expect(transformed('regex({raw: [String.raw`.`]})')).toBe(actual(regex({raw: [String.raw`.`]})));
     });
   });
 

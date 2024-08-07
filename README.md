@@ -1,8 +1,27 @@
 # babel-plugin-transform-regex [![npm](https://img.shields.io/npm/v/babel-plugin-transform-regex)](https://www.npmjs.com/package/babel-plugin-transform-regex)
 
-This is a [Babel](https://babel.dev/) plugin that transpiles tagged [`regex`](https://github.com/slevithan/regex) templates into native `RegExp` literals, enabling syntax for modern and more readable regex features (atomic groups, subroutines, definition groups, insignificant whitespace, comments, *named capture only* mode, etc.) without the need for calling `regex` at runtime. Although `regex` is already a lightweight and high-performance library, this takes things even further by giving you its developer experience benefits without adding any runtime dependencies and without users paying any runtime cost.
+This is a [Babel](https://babel.dev/) plugin that transpiles tagged [`regex`](https://github.com/slevithan/regex) templates into native `RegExp` literals, enabling syntax for modern and more readable regex features (atomic groups, subroutines, subroutine definition groups, insignificant whitespace, comments, *named capture only* mode, etc.) without the need for calling `regex` at runtime. Although `regex` is already a lightweight and high-performance library, this takes things further by giving you its developer experience benefits without adding any runtime dependencies and without users paying any runtime cost.
 
-**[Try the demo REPL](https://slevithan.github.io/babel-plugin-transform-regex/demo/)**.
+<big>**[Try the demo REPL](https://slevithan.github.io/babel-plugin-transform-regex/demo/)**.</big>
+
+## Example
+
+Input:
+
+```js
+const ipv4 = regex`^
+  (?<byte> 2[0-4]\d | 25[0-5] | 1\d\d | [1-9]?\d )
+  ( \. \g<byte> ){3}
+$`;
+```
+
+Output:
+
+```js
+const ipv4 = /^(?<byte>2[0-4]\d|25[0-5]|1\d\d|[1-9]?\d)(?:\.(?:2[0-4]\d|25[0-5]|1\d\d|[1-9]?\d)){3}$/v;
+```
+
+## Supported
 
 The following call formats are all supported:
 
@@ -14,37 +33,23 @@ The following call formats are all supported:
 Interpolation into the expression is supported, so long as the interpolated values are:
 
 - Inline string, regexp, or number literals.
-- Inline regexes constructed via `RegExp` with string values.
-- Inline patterns, via `` pattern`…` `` as a template tag (without interpolation) or `pattern(…)` as a funcion call with a string or number value.
+- Inline regexes constructed via `RegExp` or `new RegExp` with string values.
+- Inline patterns, via `` pattern`…` `` as a template tag (without interpolation) or `pattern(…)` as a funcion call with a string or number literal as the value.
 
 Additional details:
 
 - Wherever strings are allowed, `'…'`, `"…"`, `` `…` ``, and `` String.raw`…` `` can all be used, so long as they don't include interpolation.
-- Tagged `regex` templates that interpolate variables or other dynamic values are **not transformed**.
 - Basic support is included for transforming the `regex` tag when called as a function instead of with backticks, via `regex({raw: ['<expression>']})`.
 
-**TODO:** Support for additional usage patterns might be added in future versions, including interpolating variables that hold non-dynamic strings, regexes, numbers, and patterns. Contributions are welcome!
+## Unsupported
 
-## Example
+Tagged `regex` templates that interpolate variables or other dynamic values are not transformed. Support for interpolating variables that hold non-dynamic strings, regexes, numbers, and patterns might be added in future versions. Contributions are welcome!
 
-Input:
-
-```js
-export const ipv4 = regex`^
-  (?<byte> 2[0-4]\d | 25[0-5] | 1\d\d | [1-9]?\d )
-  ( \. \g<byte> ){3}
-$`;
-```
-
-Output:
-
-```js
-export const ipv4 = /^(?<byte>2[0-4]\d|25[0-5]|1\d\d|[1-9]?\d)(?:\.(?:2[0-4]\d|25[0-5]|1\d\d|[1-9]?\d)){3}$/v;
-```
+Although the use of most options via `` regex({…})`…` `` is supported, the following specific options are explicitly disallowed: `subclass`, `plugins`, `unicodeSetsPlugin`. Regexes that use these options are not transformed.
 
 ## Compatibility
 
-Emitted regexes use flag <kbd>v</kbd>, supported by Node.js 20 and 2023-era browsers or later. You can further transpile away the <kbd>v</kbd> flag with Babel's official plugin [@babel/plugin-transform-unicode-sets-regex](https://babel.dev/docs/babel-plugin-transform-unicode-sets-regex) that is included in [@babel/preset-env](https://babel.dev/docs/babel-preset-env).
+Emitted regexes use flag <kbd>v</kbd>, supported by Node.js 20 and 2023-era browsers or later. The option `disable: {v: true}` switches `regex` to to use flag <kbd>u</kbd>, but this doesn't transpile <kbd>v</kbd>-only syntax like nested character classes and set subtraction/intersection. To support such syntax in older environments, leave flag <kbd>v</kbd> enabled and additionally use Babel's official plugin [@babel/plugin-transform-unicode-sets-regex](https://babel.dev/docs/babel-plugin-transform-unicode-sets-regex), which is included in [@babel/preset-env](https://babel.dev/docs/babel-preset-env).
 
 ## Installation and usage
 

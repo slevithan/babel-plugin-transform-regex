@@ -70,20 +70,36 @@ export default ({types: t}) => {
     }
   }
   function isSimpleOptionsObject(node) {
+    const disallowedOptions = [
+      'subclass',
+      'plugins',
+      'unicodeSetsPlugin',
+    ];
     return t.isObjectExpression(node) &&
       node.properties.every(p => {
         return t.isObjectProperty(p) &&
           t.isIdentifier(p.key) &&
-          (isNondynamicString(p.value) || t.isBooleanLiteral(p.value));
+          !disallowedOptions.includes(p.key.name) &&
+          ( // Allow: nested simple object
+            isSimpleOptionsObject(p.value) ||
+            isNondynamicString(p.value) ||
+            t.isBooleanLiteral(p.value)
+          );
       });
   }
   // Assumes the structure was validated by `isSimpleOptionsObject`
   function getSimpleOptionsObject(node) {
     const object = {};
     node.properties.forEach(p => {
-      object[p.key.name] = isNondynamicString(p.value) ?
-        getNondynamicString(p.value) :
-        p.value.value;
+      let value;
+      if (isNondynamicString(p.value)) {
+        value = getNondynamicString(p.value);
+      } else if (t.isBooleanLiteral(p.value)) {
+        value = p.value.value;
+      } else {
+        value = getSimpleOptionsObject(p.value);
+      }
+      object[p.key.name] = value;
     });
     return object;
   }
@@ -184,7 +200,7 @@ export default ({types: t}) => {
       t.isIdentifier(arg.properties[0].key, {name: 'raw'}) &&
       t.isArrayExpression(arg.properties[0].value) &&
       arg.properties[0].value.elements.length === 1 &&
-      t.isStringLiteral(arg.properties[0].value.elements[0])
+      isNondynamicString(arg.properties[0].value.elements[0])
     ) {
       return true;
     }
@@ -206,14 +222,13 @@ export default ({types: t}) => {
       CallExpression(path) {
         // Currently only has basic support for `regex({raw: ['<expression>']})`
         // TODO: Allow:
-        // - `regex('<flags>')({raw: ['<expression>']})`
-        // - `regex({<options>})({raw: ['<expression>']})`
-        // - `regex({raw: [`<expression>`]})`, with template literal or String.raw`<expression>`
-        // - `regex({raw: ['<expression>', '<expression>']}, <value>)`, with template substitutions
+        // - regex('<flags>')({raw: ['<expression>']})
+        // - regex({<options>})({raw: ['<expression>']})
+        // - regex({raw: ['<expression>', '<expression>']}, <value>)
         if (!isRegexTemplateViaCall(path.node)) {
           return;
         }
-        const expression = path.node.arguments[0].properties[0].value.elements[0].value;
+        const expression = getNondynamicString(path.node.arguments[0].properties[0].value.elements[0]);
         const re = regex({raw: [expression]});
         path.replaceWith(t.regExpLiteral(re.source, re.flags));
       },

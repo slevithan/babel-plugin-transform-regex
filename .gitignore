@@ -1,5 +1,5 @@
 node_modules
-temp
+/temp
 
 # Folder view configuration/cache files
 .DS_Store
