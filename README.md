@@ -9,16 +9,19 @@ This is a [Babel](https://babel.dev/) plugin that transpiles tagged [`regex`](ht
 Input:
 
 ```js
-const ipv4 = regex`^
-  (?<byte> 2[0-4]\d | 25[0-5] | 1\d\d | [1-9]?\d )
-  ( \. \g<byte> ){3}
-$`;
+const ipv4 = regex`
+  ^ \g<byte> (\.\g<byte>){3} $
+
+  (?(DEFINE)
+    (?<byte> 2[0-4]\d | 25[0-5] | 1\d\d | [1-9]?\d)
+  )
+`;
 ```
 
 Output:
 
 ```js
-const ipv4 = /^(?<byte>2[0-4]\d|25[0-5]|1\d\d|[1-9]?\d)(?:\.(?:2[0-4]\d|25[0-5]|1\d\d|[1-9]?\d)){3}$/v;
+const ipv4 = /^(?:2[0-4]\d|25[0-5]|1\d\d|[1-9]?\d)(?:\.(?:2[0-4]\d|25[0-5]|1\d\d|[1-9]?\d)){3}$/v;
 ```
 
 ## Supported
