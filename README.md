@@ -2,7 +2,7 @@
 
 This is a [Babel](https://babel.dev/) plugin that transpiles tagged [`regex`](https://github.com/slevithan/regex) templates into native `RegExp` literals, enabling syntax for modern and more readable regex features (atomic groups, subroutines, subroutine definition groups, insignificant whitespace, comments, *named capture only* mode, etc.) without the need for calling `regex` at runtime. Although `regex` is already a lightweight and high-performance library, this takes things further by giving you its developer experience benefits without adding any runtime dependencies and without users paying any runtime cost.
 
-<big>**[Try the demo REPL](https://slevithan.github.io/babel-plugin-transform-regex/demo/)**</big>
+### [Try the demo REPL](https://slevithan.github.io/babel-plugin-transform-regex/demo/)
 
 ## Example
 
