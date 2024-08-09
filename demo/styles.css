@@ -34,7 +34,7 @@ h2 {
 textarea {
   width: 100%;
   min-height: 150px;
-  max-height: 250px;
+  max-height: 220px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   transition: box-shadow 0.2s ease;
   background-color: #fcfcfc;
@@ -62,10 +62,10 @@ pre, code, textarea {
   border: 1px dotted #aaa;
   width: 100%;
   min-height: 2.5em;
-  max-height: 200px;
+  max-height: 150px;
   overflow: auto;
   background-color: #fff;
-  margin-bottom: 6px;
+  margin-bottom: 0;
 }
 
 #output.error {
@@ -76,6 +76,14 @@ figure {
   border-radius: 0.375em;
   background-color: #f9f9f9;
   padding: 0.3em;
+}
+
+figcaption {
+  margin-bottom: 6px;
+}
+
+label {
+  display: block;
 }
 
 code {

@@ -1,4 +1,5 @@
 import {regex, pattern} from 'regex';
+import optimizer from '../tools/optimizer.js';
 
 export default ({types: t}) => {
   function isNondynamicRegExpCall(node) {
@@ -11,11 +12,13 @@ export default ({types: t}) => {
       (args.length === 1 || args.length === 2) &&
       args.every(a => isNondynamicString(a));
   }
+
   // Assumes the structure was validated by `isNondynamicRegExpCall`
   function getNondynamicRegExpCall(node) {
     const args = node.arguments;
     return new RegExp(getNondynamicString(args[0]), getNondynamicString(args[1]));
   }
+
   function isNondynamicPattern(node) {
     return ( // `pattern` call
       t.isCallExpression(node) &&
@@ -29,6 +32,7 @@ export default ({types: t}) => {
       node.quasi.quasis.length === 1
     );
   }
+
   // Assumes the structure was validated by `isNondynamicPattern`
   function getNondynamicPattern(node) {
     if (t.isCallExpression(node)) {
@@ -43,6 +47,7 @@ export default ({types: t}) => {
       return pattern(node.quasi.quasis[0].value.raw);
     }
   }
+
   function isNondynamicString(node) {
     return t.isStringLiteral(node) ||
       ( // Allow: `...`, without interpolation
@@ -57,6 +62,7 @@ export default ({types: t}) => {
         t.isIdentifier(node.tag.property, {name: 'raw'})
       );
   }
+
   // Assumes the structure was validated by `isNondynamicString`
   function getNondynamicString(node) {
     if (t.isStringLiteral(node)) {
@@ -69,6 +75,7 @@ export default ({types: t}) => {
       return node.quasi.quasis[0].value.raw;
     }
   }
+
   function isSimpleOptionsObject(node) {
     const disallowedOptions = [
       'subclass',
@@ -87,6 +94,7 @@ export default ({types: t}) => {
           );
       });
   }
+
   // Assumes the structure was validated by `isSimpleOptionsObject`
   function getSimpleOptionsObject(node) {
     const object = {};
@@ -103,6 +111,7 @@ export default ({types: t}) => {
     });
     return object;
   }
+
   function isWhitelistedInterpolation(expressions) {
     return expressions.every(e => {
       return isNondynamicString(e) ||
@@ -112,6 +121,7 @@ export default ({types: t}) => {
         isNondynamicPattern(e);
     });
   }
+
   function getRegexCallArg(node) {
     const args = node.tag.arguments ?? [];
     if (args.length) {
@@ -123,11 +133,13 @@ export default ({types: t}) => {
       }
     }
   }
+
   function getRegexQuasisRaw(node) {
     const result = [];
     node.quasi.quasis.forEach(q => result.push(q.value.raw));
     return result;
   }
+
   function getRegexExpressions(node) {
     const result = [];
     node.quasi.expressions.forEach(e => {
@@ -184,53 +196,56 @@ export default ({types: t}) => {
     return false;
   }
 
-  function isRegexTemplateViaCall(node) {
-    if (!(
-      t.isIdentifier(node.callee, {name: 'regex'}) &&
-      node.arguments.length === 1
-    )) {
-      return false;
-    }
-    const arg = node.arguments[0];
-    // Allow: `regex({raw: ['<expression>']})`
-    if (
-      t.isObjectExpression(arg) &&
-      arg.properties.length === 1 &&
-      t.isObjectProperty(arg.properties[0]) &&
-      t.isIdentifier(arg.properties[0].key, {name: 'raw'}) &&
-      t.isArrayExpression(arg.properties[0].value) &&
-      arg.properties[0].value.elements.length === 1 &&
-      isNondynamicString(arg.properties[0].value.elements[0])
-    ) {
-      return true;
-    }
-    return false;
+  function getRegexOptions(callArg, babelPluginOptions) {
+    const {disableUnicodeSets, optimize} = babelPluginOptions;
+    // The optimizer doesn't support flag v
+    const disableV = !!(disableUnicodeSets || optimize);
+    return {
+      ...(typeof callArg === 'string' ? {flags: callArg} : callArg),
+      disable: {
+        ...callArg?.disable,
+        v: disableV,
+      },
+    };
+  }
+
+  function getOptimizedRegex(re) {
+    return optimizer.optimize(re, {whitelist: [
+      // All options: https://github.com/DmitrySoshnikov/regexp-tree/tree/master/src/optimizer
+      'charEscapeUnescape',
+      'groupSingleCharsToCharClass',
+      'removeEmptyGroup', // Incorrectly removes the empty group in e.g. `\0(?:)0`
+      'ungroup', // Incorrectly removes the group in e.g. `(?:\0)0`
+    ]}).toRegExp();
   }
 
   return {
     visitor: {
-      TaggedTemplateExpression(path) {
+      TaggedTemplateExpression(path, state) {
         if (!isRegexTemplate(path.node)) {
           return;
         }
-        const callArg = getRegexCallArg(path.node);
+        const {optimize} = state.opts;
+        const options = getRegexOptions(getRegexCallArg(path.node), state.opts);
         const quasis = getRegexQuasisRaw(path.node);
         const expressions = getRegexExpressions(path.node);
-        const re = regex(callArg)({raw: quasis}, ...expressions);
+        let re = regex(options)({raw: quasis}, ...expressions);
+        if (optimize && !options.force?.v) {
+          re = getOptimizedRegex(re);
+        }
         path.replaceWith(t.regExpLiteral(re.source, re.flags));
       },
-      CallExpression(path) {
-        // Currently only has basic support for `regex({raw: ['<expression>']})`
-        // TODO: Allow:
-        // - regex('<flags>')({raw: ['<expression>']})
-        // - regex({<options>})({raw: ['<expression>']})
-        // - regex({raw: ['<expression>', '<expression>']}, <value>)
-        if (!isRegexTemplateViaCall(path.node)) {
-          return;
+      ImportDeclaration(path, state) {
+        const {removeImport} = state.opts;
+        if (removeImport && path.node.source.value === 'regex') {
+          path.remove();
         }
-        const expression = getNondynamicString(path.node.arguments[0].properties[0].value.elements[0]);
-        const re = regex({raw: [expression]});
-        path.replaceWith(t.regExpLiteral(re.source, re.flags));
+      },
+      Program(path, state) {
+        const {headerComment} = state.opts;
+        if (headerComment) {
+          path.addComment('leading', `\n${headerComment}\n`);
+        }
       },
     },
   };

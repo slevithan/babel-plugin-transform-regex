@@ -45,13 +45,6 @@ describe('regex', () => {
       expect(transformed("regex({plugins: []})`.`")).not.toBe(actual(regex({plugins: []})`.`));
       expect(transformed("regex({unicodeSetsPlugin: null})`.`")).not.toBe(actual(regex({unicodeSetsPlugin: null})`.`));
     });
-
-    it('should transform function call with raw array', () => {
-      expect(transformed("regex({raw: ['.']})")).toBe(actual(regex({raw: ['.']})));
-      expect(transformed('regex({raw: ["."]})')).toBe(actual(regex({raw: ["."]})));
-      expect(transformed('regex({raw: [`.`]})')).toBe(actual(regex({raw: [`.`]})));
-      expect(transformed('regex({raw: [String.raw`.`]})')).toBe(actual(regex({raw: [String.raw`.`]})));
-    });
   });
 
   describe('interpolation of non-dynamic inline values', () => {

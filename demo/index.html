@@ -17,7 +17,8 @@
     <p>This is a basic REPL for testing the output of <a href="https://github.com/slevithan/babel-plugin-transform-regex">babel-plugin-transform-regex</a>, which allows most of the <a href="https://github.com/slevithan/regex">regex</a> library's features to be used dependency-free and without any runtime cost.</p>
 
     <h2>Try it</h2>
-    <p><textarea id="input" spellcheck="false" oninput="showOutput(this); autoGrow(this)">const re = regex('i')`
+    <p><textarea id="input" spellcheck="false" oninput="showOutput(this); autoGrow(this)">import { regex } from 'regex';
+const re = regex('i')`
   ^ Admitted:\ (?<admitted> \g<date>) \n
     Released:\ (?<released> \g<date>) $
 
@@ -29,63 +30,36 @@
   )
 `;</textarea></p>
     <figure>
-      <pre id="output"></pre>
       <figcaption>
         <label>
-          <input type="checkbox" id="transform-v" onchange="transformV(this.checked)">
+          <input type="checkbox" id="remove-import" onchange="setRemoveImport(this.checked)">
+          Set option <code>removeImport: true</code>
+        </label>
+        <label>
+          <input type="checkbox" id="disable-unicode-sets" onchange="setDisableUnicodeSets(this.checked)">
+          Set option <code>disableUnicodeSets: true</code>
+        </label>
+        <label>
+          <input type="checkbox" id="optimize" onchange="setOptimize(this.checked)">
+          Set option <code>optimize: true</code> (<em>experimental</em>)
+        </label>
+        <label>
+          <input type="checkbox" id="header-comment" onchange="setHeaderComment(this.checked)">
+          Set option <code>headerComment</code>
+        </label>
+        <label>
+          <input type="checkbox" id="transform-unicode-sets" onchange="setTransformUnicodeSets(this.checked)">
           Also apply <code>@babel/plugin-transform-unicode-sets-regex</code>
         </label>
       </figcaption>
+      <pre id="output"></pre>
     </figure>
   </div>
 
   <script src="https://unpkg.com/@babel/standalone@7.25.3/babel.min.js"></script>
   <script src="../dist/standalone.min.js"></script>
-  <script>
-    Babel.registerPlugin('babel-plugin-transform-regex', BabelPluginTransformRegexStandalone);
+  <script src="./demo.js"></script>
 
-    let shouldTransformV = document.getElementById('transform-v').checked;
-    const inputEl = document.getElementById('input');
-    autoGrow(inputEl);
-    showOutput(inputEl);
-
-    function showOutput(el) {
-      const code = el.value;
-      const outputEl = document.getElementById('output');
-      const plugins = ['babel-plugin-transform-regex'];
-      if (shouldTransformV) {
-        plugins.push(Babel.availablePlugins['transform-unicode-sets-regex']);
-      }
-      outputEl.classList.remove('error');
-      try {
-        const output = Babel.transform(code, {plugins}).code;
-        outputEl.innerHTML = escapeHtml(output);
-      } catch (e) {
-        outputEl.classList.add('error');
-        outputEl.innerHTML = `Error: ${escapeHtml(cleanupError(e.message))}`;
-      }
-    }
-
-    function cleanupError(str) {
-      return str.
-        replace(/^unknown(?: file)?: /, '').
-        replace(/^(Invalid regular expression: )\/.*?\/v: (.*)/su, '$1$2');
-    }
-
-    function autoGrow(el) {
-      el.style.height = '0';
-      el.style.height = (el.scrollHeight + 5) + 'px';
-    }
-
-    function escapeHtml(str) {
-      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;');
-    }
-
-    function transformV(checked) {
-      shouldTransformV = checked;
-      showOutput(inputEl);
-    }
-  </script>
   <!-- Load `regex` so it can be used in the console -->
   <script src="https://cdn.jsdelivr.net/npm/regex@4.0.0/dist/regex.min.js"></script>
   <script>
