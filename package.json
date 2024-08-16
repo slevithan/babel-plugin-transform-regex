@@ -29,7 +29,7 @@
     "babel-plugin"
   ],
   "dependencies": {
-    "regex": "^4.0.0"
+    "regex": "^4.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
