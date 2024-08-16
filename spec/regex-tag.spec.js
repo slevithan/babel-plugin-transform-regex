@@ -1,9 +1,9 @@
 import {regex, pattern} from 'regex';
 import {transformSync} from '@babel/core';
-import plugin from '../src/index.js';
+import babelPluginTransformRegex from '../src/index.js';
 
 function transformed(input) {
-  return transformSync(input, {plugins: [plugin]}).code;
+  return transformSync(input, {plugins: [babelPluginTransformRegex]}).code;
 }
 
 function actual(re) {
