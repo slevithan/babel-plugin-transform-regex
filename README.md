@@ -66,14 +66,18 @@ By default, the `regex` library implicitly adds flag <kbd>v</kbd> (`unicodeSets`
 There are several ways to address this:
 
 - **Option 1:** Leave <kbd>v</kbd> enabled and transpile <kbd>v</kbd> with a separate Babel plugin.
-  - This is a great choice since it allows supporting <kbd>v</kbd>-only syntax (like nested character classes) in older environments.
+  - This allows supporting <kbd>v</kbd>-only syntax (like nested character classes) in older environments.
   - Use Babel's official plugin [@babel/plugin-transform-unicode-sets-regex](https://babel.dev/docs/babel-plugin-transform-unicode-sets-regex), which is also included in [@babel/preset-env](https://babel.dev/docs/babel-preset-env).
 - **Option 2:** Disable <kbd>v</kbd> for all transpiled regexes.
   - To do this, set the Babel plugin option `disableUnicodeSets: true` (see details above).
+  - This keeps things simple/clean and avoids a second regex transpilation step.
   - This doesn't support the use of <kbd>v</kbd>-only syntax.
 - **Option 3:** Disable <kbd>v</kbd> for individual regexes.
-  - To do this, use the `regex` option `` regex({disable: {v: true}})`…` ``.
+  - To do this, use the `regex` option `` regex({disable: {v: true}})`…` `` in your code.
+  - This maintains 100% parity between code running with or without the Babel plugin.
   - This doesn't support the use of <kbd>v</kbd>-only syntax.
+
+You can try all these options in the [demo REPL](https://slevithan.github.io/babel-plugin-transform-regex/demo/).
 
 ## Installation and usage
 
