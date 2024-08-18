@@ -20,7 +20,7 @@ function showOutput(el) {
     removeImport: useRemoveImport,
     disableUnicodeSets: useDisableUnicodeSets,
     optimize: useOptimize,
-    headerComment: useHeaderComment ? 'Comment text is provided as the value of option `headerComment`' : null,
+    headerComment: useHeaderComment ? "Source transformed by `babel-plugin-transform-regex`. This comment's text was\nprovided as the value of the `headerComment` option." : null,
   }]];
   if (useTransformUnicodeSets) {
     plugins.push(Babel.availablePlugins['transform-unicode-sets-regex']);
