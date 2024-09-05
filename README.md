@@ -46,7 +46,7 @@ Additional details:
 ## Unsupported
 
 - Tagged `regex` templates that interpolate variables or other dynamic values are not transformed.
-- The specific `regex` options `subclass`, `plugins`, and `unicodeSetsPlugin` are disallowed. Regexes that use these options are not transformed.
+- The specific `regex` options `subclass`, `plugins`, and `unicodeSetsPlugin` are unsupported. Regexes that use these options are not transformed.
 - Calling the `regex` tag as a function instead of with backticks is not transformed.
 
 ## Babel plugin options

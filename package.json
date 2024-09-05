@@ -9,7 +9,7 @@
   "scripts": {
     "build:optimizer": "esbuild --format=esm --bundle node_modules/regexp-tree/dist/optimizer/index.js --outfile=tools/optimizer.js",
     "build:standalone": "esbuild src/index.js --bundle --minify --outfile=dist/standalone.min.js --global-name=BabelPluginTransformRegexStandalone",
-    "prebuild": "rimraf --glob dist/* tools/*",
+    "prebuild": "rm -rf dist/* tools/*",
     "build": "npm run build:optimizer && npm run build:standalone",
     "pretest": "npm run build",
     "test": "jasmine",
@@ -29,13 +29,12 @@
     "babel-plugin"
   ],
   "dependencies": {
-    "regex": "^4.1.1"
+    "regex": "^4.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
-    "esbuild": "^0.23.0",
+    "esbuild": "^0.23.1",
     "jasmine": "^5.2.0",
-    "regexp-tree": "^0.1.27",
-    "rimraf": "^6.0.1"
+    "regexp-tree": "^0.1.27"
   }
 }
