@@ -7,8 +7,8 @@
   "type": "module",
   "exports": "./src/index.js",
   "scripts": {
-    "build:optimizer": "esbuild --format=esm --bundle node_modules/regexp-tree/dist/optimizer/index.js --outfile=tools/optimizer.js",
-    "build:standalone": "esbuild src/index.js --bundle --minify --outfile=dist/standalone.min.js --global-name=BabelPluginTransformRegexStandalone",
+    "build:optimizer": "esbuild node_modules/regexp-tree/dist/optimizer/index.js --format=esm --bundle --outfile=tools/optimizer.js",
+    "build:standalone": "esbuild src/index.js --global-name=BabelPluginTransformRegexStandalone --bundle --minify --outfile=dist/standalone.min.js",
     "prebuild": "rm -rf dist/* tools/*",
     "build": "npm run build:optimizer && npm run build:standalone",
     "pretest": "npm run build",

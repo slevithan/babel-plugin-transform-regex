@@ -200,13 +200,12 @@ export default ({types: t}) => {
     const {disableUnicodeSets, optimize} = babelPluginOptions;
     // The optimizer doesn't support flag v
     const disableV = !!(disableUnicodeSets || optimize);
-    return {
-      ...(typeof callArg === 'string' ? {flags: callArg} : callArg),
-      disable: {
-        ...callArg?.disable,
-        v: disableV,
-      },
-    };
+    const options = {...(typeof callArg === 'string' ? {flags: callArg} : callArg)};
+    if (disableV) {
+      options.disable ??= {};
+      options.disable.v = true;
+    }
+    return options;
   }
 
   function getOptimizedRegex(re) {
@@ -230,6 +229,7 @@ export default ({types: t}) => {
         const quasis = getRegexQuasisRaw(path.node);
         const expressions = getRegexExpressions(path.node);
         let re = regex(options)({raw: quasis}, ...expressions);
+        // The optimizer doesn't support flag v
         if (optimize && !options.force?.v) {
           re = getOptimizedRegex(re);
         }

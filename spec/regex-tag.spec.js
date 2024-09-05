@@ -36,8 +36,15 @@ describe('regex', () => {
       expect(transformed('regex({flags: "i"})`.`')).toBe(actual(regex({flags: "i"})`.`));
       expect(transformed('regex({flags: `i`})`.`')).toBe(actual(regex({flags: `i`})`.`));
       expect(transformed('regex({flags: String.raw`i`})`.`')).toBe(actual(regex({flags: String.raw`i`})`.`));
-      expect(transformed("regex({flags: 'i', disable: {x: false}})` . `")).toBe(actual(regex({flags: 'i', disable: {x: false}})` . `));
+    });
+
+    it('should transform tag with options object that disables features', () => {
       expect(transformed("regex({flags: 'i', disable: {x: true}})` . `")).toBe(actual(regex({flags: 'i', disable: {x: true}})` . `));
+      expect(transformed("regex({disable: {x: true}})` . `")).toBe(actual(regex({disable: {x: true}})` . `));
+      expect(transformed("regex({disable: {x: false}})` . `")).toBe(actual(regex({disable: {x: false}})` . `));
+      expect(transformed("regex({disable: {v: true}})`.`")).toBe(actual(regex({disable: {v: true}})`.`));
+      expect(transformed("regex({disable: {v: false}})`.`")).toBe(actual(regex({disable: {v: false}})`.`));
+      expect(transformed("regex({disable: {v: true}, force: {v: true}})`.`")).toBe(actual(regex({disable: {v: true}, force: {v: true}})`.`));
     });
 
     it('should not transform tag with explicitly disallowed options', () => {
