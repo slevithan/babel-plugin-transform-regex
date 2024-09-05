@@ -1,4 +1,7 @@
-# babel-plugin-transform-regex [![npm](https://img.shields.io/npm/v/babel-plugin-transform-regex)](https://www.npmjs.com/package/babel-plugin-transform-regex)
+# babel-plugin-transform-regex
+
+[![build status](https://github.com/slevithan/babel-plugin-transform-regex/workflows/CI/badge.svg)](https://github.com/slevithan/babel-plugin-transform-regex/actions)
+[![npm](https://img.shields.io/npm/v/babel-plugin-transform-regex)](https://www.npmjs.com/package/babel-plugin-transform-regex)
 
 This is a [Babel](https://babel.dev/) plugin that transpiles tagged [`regex`](https://github.com/slevithan/regex) templates into native `RegExp` literals, enabling syntax for modern and more readable regex features (atomic groups, subroutines, insignificant whitespace, comments, etc.) without the need for calling `regex` at runtime. Although `regex` is already a lightweight and high-performance library, this takes things further by giving you its developer experience benefits without adding any runtime dependencies and without users paying any runtime cost.
 
@@ -61,7 +64,7 @@ The following options are available when running the Babel plugin:
 
 ## Compatibility
 
-By default, the `regex` library implicitly adds flag <kbd>v</kbd> (`unicodeSets`, supported by Node.js 20 and 2023-era browsers) to generated regexes, but it automatically switches to flag <kbd>u</kbd> (while applying <kbd>v</kbd>'s escaping rules) in environments without native <kbd>v</kbd> support. This creates an issue for the Babel plugin, because although it will typically be run in environments that support <kbd>v</kbd>, the transpiled results may need to run for users in old browsers without native <kbd>v</kbd>.
+By default, the `regex` tag implicitly adds flag <kbd>v</kbd> (`unicodeSets`, supported by Node.js 20 and 2023-era browsers) to generated regexes, but it automatically switches to flag <kbd>u</kbd> (while applying <kbd>v</kbd>'s escaping rules) in environments without native <kbd>v</kbd> support. This creates an issue for the Babel plugin, because although it will typically be run in environments that support flag <kbd>v</kbd>, the transpiled results may need to run for users in old browsers without native <kbd>v</kbd>.
 
 There are several ways to address this:
 
