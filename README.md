@@ -1,7 +1,6 @@
 # babel-plugin-transform-regex
 
-[![build status](https://github.com/slevithan/babel-plugin-transform-regex/workflows/CI/badge.svg)](https://github.com/slevithan/babel-plugin-transform-regex/actions)
-[![npm](https://img.shields.io/npm/v/babel-plugin-transform-regex)](https://www.npmjs.com/package/babel-plugin-transform-regex)
+[![npm version][npm-version-src]][npm-version-href]
 
 This is a [Babel](https://babel.dev/) plugin that transpiles tagged [`regex`](https://github.com/slevithan/regex) templates into native `RegExp` literals, enabling syntax for modern and more readable regex features (atomic groups, subroutines, insignificant whitespace, comments, etc.) without the need for calling `regex` at runtime. Although `regex` is already a lightweight and high-performance library, this takes things further by giving you its developer experience benefits without adding any runtime dependencies and without users paying any runtime cost.
 
@@ -123,3 +122,8 @@ Then add a script to your `package.json` to run the build:
 ```
 
 After that, you can run it via `npm run build`.
+
+<!-- Badges -->
+
+[npm-version-src]: https://img.shields.io/npm/v/babel-plugin-transform-regex?color=78C372
+[npm-version-href]: https://npmjs.com/package/babel-plugin-transform-regex
