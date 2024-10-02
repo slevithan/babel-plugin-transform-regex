@@ -29,12 +29,12 @@
     "babel-plugin"
   ],
   "dependencies": {
-    "regex": "^4.3.1"
+    "regex": "^4.3.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.25.2",
-    "esbuild": "^0.23.1",
-    "jasmine": "^5.2.0",
+    "@babel/core": "^7.25.7",
+    "esbuild": "^0.24.0",
+    "jasmine": "^5.3.0",
     "regexp-tree": "^0.1.27"
   }
 }
