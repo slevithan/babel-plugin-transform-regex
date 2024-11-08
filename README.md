@@ -2,7 +2,7 @@
 
 [![npm version][npm-version-src]][npm-version-href]
 
-This is a [Babel](https://babel.dev/) plugin that transpiles tagged [`regex`](https://github.com/slevithan/regex) templates into native `RegExp` literals, enabling syntax for modern and more readable regex features (atomic groups, subroutines, insignificant whitespace, comments, etc.) without the need for calling `regex` at runtime. Although `regex` is already a lightweight and high-performance library, this takes things further by giving you its developer experience benefits without adding any runtime dependencies and without users paying any runtime cost.
+This is a [Babel](https://babel.dev/) plugin that transpiles tagged [Regex+](https://github.com/slevithan/regex) `regex` templates into native `RegExp` literals, enabling syntax for modern and more readable regex features (atomic groups, subroutines, insignificant whitespace, comments, etc.) without the need for calling `regex` at runtime. Although Regex+ is already a lightweight and high-performance library, this takes things further by giving you its developer experience benefits without adding any runtime dependencies and without users paying any runtime cost.
 
 ### [Try the demo REPL](https://slevithan.github.io/babel-plugin-transform-regex/demo/)
 
@@ -83,7 +83,7 @@ You can try all of these options in the [demo REPL](https://slevithan.github.io/
 
 ## Installation and usage
 
-Add this plugin and a recent version of Babel (tested with v7.24) to your project:
+Add this plugin and a recent version of Babel (tested with 7.24–7.26) to your project:
 
 ```sh
 npm install --save-dev @babel/core @babel/cli
