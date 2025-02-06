@@ -10,10 +10,10 @@
     "build:optimizer": "esbuild node_modules/regexp-tree/dist/optimizer/index.js --format=esm --bundle --outfile=tools/optimizer.js",
     "build:standalone": "esbuild src/index.js --global-name=BabelPluginTransformRegexStandalone --bundle --minify --outfile=dist/standalone.min.js",
     "prebuild": "rm -rf dist/* tools/*",
-    "build": "npm run build:optimizer && npm run build:standalone",
-    "pretest": "npm run build",
+    "build": "pnpm run build:optimizer && pnpm run build:standalone",
+    "pretest": "pnpm run build",
     "test": "jasmine",
-    "prepare": "npm test"
+    "prepare": "pnpm test"
   },
   "files": [
     "src",
@@ -36,5 +36,6 @@
     "esbuild": "^0.24.2",
     "jasmine": "^5.5.0",
     "regexp-tree": "^0.1.27"
-  }
+  },
+  "packageManager": "pnpm@9.15.4"
 }
