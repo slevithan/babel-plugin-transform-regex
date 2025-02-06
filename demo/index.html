@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>regex: Babel plugin REPL</title>
-  <link href="styles.css" rel="stylesheet">
+  <title>Regex+: Babel plugin REPL</title>
+  <link href="./styles.css" rel="stylesheet">
 </head>
 <body>
   <div id="content">
@@ -56,12 +56,12 @@ const re = regex('i')`
     </figure>
   </div>
 
-  <script src="https://unpkg.com/@babel/standalone@7.26.2/babel.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.26.7/babel.min.js"></script>
   <script src="../dist/standalone.min.js"></script>
   <script src="./demo.js"></script>
 
   <!-- Load `regex` so it can be used in the console -->
-  <script src="https://cdn.jsdelivr.net/npm/regex@4.4.0/dist/regex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/regex@6.0.1/dist/regex.min.js"></script>
   <script>
     const {regex, pattern, rewrite} = Regex;
   </script>
