@@ -2,7 +2,7 @@
 
 [![npm version][npm-version-src]][npm-version-href]
 
-This is a [Babel](https://babel.dev/) plugin that transpiles tagged [Regex+](https://github.com/slevithan/regex) `regex` templates into native `RegExp` literals, enabling syntax for modern, readable regex features (atomic groups, subroutines, insignificant whitespace, comments, etc.) without the need for calling `regex` at runtime. Although Regex+ is already a lightweight and high-performance library, this takes things further by giving you its developer experience benefits without adding any runtime dependencies and without users paying any runtime cost.
+This is a [Babel](https://babel.dev/) plugin that transpiles uses of [Regex+](https://github.com/slevithan/regex)'s `regex` tags into native `RegExp` literals. This enables using Regex+ to add support for modern, readable regex features (atomic groups, possessive quantifiers, subroutines, definition groups, insignificant whitespace, comments, etc.) without the need for calling `regex` at runtime. Although Regex+ is already a lightweight and high-performance library, this takes things further by giving you its developer experience benefits without adding any runtime dependencies and without users paying any runtime cost.
 
 ## 🧪 [Try the demo REPL](https://slevithan.github.io/babel-plugin-transform-regex/demo/)
 
@@ -47,7 +47,7 @@ Additional details:
 
 ## ❌ Unsupported
 
-- Tagged `regex` templates that interpolate variables or other dynamic values are not transformed.
+- `regex` templates that interpolate variables or other dynamic values are not transformed.
 - The specific `regex` options `subclass`, `plugins`, and `unicodeSetsPlugin` are unsupported. Regexes that use these options are not transformed.
 - Calling the `regex` tag as a function instead of with backticks is not transformed.
 
@@ -84,7 +84,7 @@ There are several ways to address this:
 
 ## 🕹️ Install and use
 
-Add this plugin and a recent version of Babel (tested with 7.24–7.26) to your project:
+Add this plugin and a recent version of Babel (tested with 7.24–7.28) to your project:
 
 ```sh
 npm install --save-dev @babel/core @babel/cli
@@ -106,7 +106,7 @@ To make this easier to run, create a config file in the root of your project nam
 }
 ```
 
-If you're using TypeScript, also add plugin [@babel/plugin-syntax-typescript](https://babeljs.io/docs/babel-plugin-syntax-typescript). Here's an example of that which additionally sets plugin options:
+If you're using TypeScript, also add plugin [@babel/plugin-syntax-typescript](https://babeljs.io/docs/babel-plugin-syntax-typescript). Here's an example that additionally sets plugin options:
 
 ```json
 {

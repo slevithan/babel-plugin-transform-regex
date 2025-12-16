@@ -29,13 +29,13 @@
     "babel-plugin"
   ],
   "dependencies": {
-    "regex": "^6.0.1"
+    "regex": "^6.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.26.7",
-    "esbuild": "^0.24.2",
-    "jasmine": "^5.5.0",
+    "@babel/core": "^7.28.5",
+    "esbuild": "^0.27.1",
+    "jasmine": "^5.13.0",
     "regexp-tree": "^0.1.27"
   },
-  "packageManager": "pnpm@9.15.4"
+  "packageManager": "pnpm@10.26.0"
 }
